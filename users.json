@@ -1,0 +1,30 @@
+{
+  "admin": [
+    {
+      "username": "admin1",
+      "password": "admin345678"
+    },
+    {
+      "username": "admin2",
+      "password": "admin250432"
+    },
+    {
+      "username": "adam",
+      "password": "minyaknabati"
+    }
+  ],
+  "client": [
+    {
+      "username": "bakso",
+      "password": "kuaci"
+    },
+    {
+      "username": "rumah",
+      "password": "belidong"
+    },
+    {
+      "username": "tahu",
+      "password": "paan"
+    }
+  ]
+}

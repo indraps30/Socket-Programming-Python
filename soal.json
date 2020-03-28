@@ -1,0 +1,22 @@
+[
+	{
+		"no": 1,
+		"soal": "Minum air pake...",
+		"nilai": 70,
+		"A": "Tangan",
+		"B": "Gelas",
+		"C": "Air",
+		"D": "Mulut",
+		"kunci_jawaban": "C"
+	},
+	{
+		"no": 2,
+		"soal": "Budi punya 15 kelereng, 6 kelereng dikasih ke Anto, 8 kelereng dimasak ibu. Pertanyaannya siapakah Junaedi?",
+		"nilai": 5,
+		"A": "Pelayan toko",
+		"B": "Kuli bangunan",
+		"C": "Penjual bakso",
+		"D": "Kelereng terakhir Anto",
+		"kunci_jawaban": "D"
+	}
+]
