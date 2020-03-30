@@ -43,8 +43,8 @@ def iudUser(mainCommand,subcommand):
 				pwd = input('password : ')
 				admin.sendall(pwd.encode('UTF-8'))
 				print(mainCommand+' '+admin.recv(2222).decode('UTF-8'))
-			elif subcommand=='delete':
-				print('user '+mainCommand+' with username '+uname+' has been removed')
+			elif subcommand=='delete':                
+				print(uname + ' ' + admin.recv(2222).decode('UTF-8'))
 			else:
 				print('Error filtering subcommand!!!')
 		elif subcommand=='insert':
