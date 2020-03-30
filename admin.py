@@ -99,7 +99,6 @@ def iudSoal(mainCommand,subcommand):
 			else:
 				print('Error filtering subcommand!!!')
 		elif subcommand=='insert':
-			# nomor soal otomatis diberikan oleh server
 			soal = input('soal : ')
 			admin.sendall(soal.encode('UTF-8'))
 			nilai = input('nilai : ')
@@ -139,8 +138,6 @@ def doCommand(command):
 		iudUser(command,subcommand)
 		# di sini beres
 	elif command=='game':
-		# TODO: membuat game ditampung di game.json lalu dipanggil untuk memulai dengan subcommand start
-		# dan diakhiri dengan subcommand end
 		print('ngurusin game yang dilakukan')
 	elif command=='soal':
 		admin.sendall(command.encode('UTF-8'))

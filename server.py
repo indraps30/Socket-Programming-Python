@@ -22,8 +22,8 @@ class UserThread(threading.Thread):
             self.soal = json.load(s)
 
     def updateGame(self):
-        with open('game.json') as s:
-            self.game = json.load(s)
+        with open('game.json') as g:
+            self.game = json.load(g)
 
     def adminAction(self,command):
         if command=='client' or command=='admin':
@@ -126,7 +126,6 @@ class UserThread(threading.Thread):
                             break
                         self.soal=s
                     if subcommand=='delete':
-                        # TODO: bikin hapus dan update seluruh no yg ada
                         print('belom dibikin')
                     if subcommand=='update':
                         print('siap menerima input update')
@@ -179,8 +178,6 @@ class UserThread(threading.Thread):
                 self.updateUserLogin()
             else:
                 print('command tidak ada!!!')
-        elif command=='game':
-
 
     def clientAction(self,command):
         print('segala yg dilakuin client')
