@@ -10,6 +10,7 @@ class UserThread(threading.Thread):
         self.usocket = usersocket
         self.userlogin = {}
         self.soal = {}
+        self.game = {}
         print ("New connection added: ", userAddress)
 
     def updateUserLogin(self):
@@ -19,6 +20,10 @@ class UserThread(threading.Thread):
     def updateSoal(self):
         with open('soal.json') as s:
             self.soal = json.load(s)
+
+    def updateGame(self):
+        with open('game.json') as s:
+            self.game = json.load(s)
 
     def adminAction(self,command):
         if command=='client' or command=='admin':
@@ -121,6 +126,7 @@ class UserThread(threading.Thread):
                             break
                         self.soal=s
                     if subcommand=='delete':
+                        # TODO: bikin hapus dan update seluruh no yg ada
                         print('belom dibikin')
                     if subcommand=='update':
                         print('siap menerima input update')
@@ -148,29 +154,24 @@ class UserThread(threading.Thread):
                         print('Error filtering subcommand!!!')
                 elif subcommand=='insert':
                     temp = {}
-                    no = int(self.usocket.recv(3048).decode())
+                    # nomor soal otomatis
+                    no = len(self.soal)
+                    temp['no'] = no
                     soal = self.usocket.recv(3048).decode()
+                    temp['soal'] = soal
                     nilai = int(self.usocket.recv(3048).decode())
+                    temp['nilai'] = nilai
                     A = self.usocket.recv(3048).decode()
+                    temp['A'] = A
                     B = self.usocket.recv(3048).decode()
+                    temp['B'] = B
                     C = self.usocket.recv(3048).decode()
+                    temp['C'] = C
                     D = self.usocket.recv(3048).decode()
+                    temp['D'] = D
                     kunjaw = self.usocket.recv(3048).decode()
-                    check = 'insert berhasil'
-                    for s in self.soal:
-                        if s['no']==no:
-                            check = 'soal sudah ada!!!'
-                            break
-                    if check=='insert berhasil':
-                        temp['no'] = no
-                        temp['soal'] = soal
-                        temp['nilai'] = nilai
-                        temp['A'] = A
-                        temp['B'] = B
-                        temp['C'] = C
-                        temp['D'] = D
-                        temp['kunci_jawaban'] = kunjaw
-                    self.usocket.send(check.encode('UTF-8'))
+                    temp['kunci_jawaban'] = kunjaw
+                    self.usocket.send('insert berhasil'.encode('UTF-8'))
                     self.soal.append(temp)
                     print(check)
                 with open('soal.json', 'w') as up:
@@ -178,6 +179,8 @@ class UserThread(threading.Thread):
                 self.updateUserLogin()
             else:
                 print('command tidak ada!!!')
+        elif command=='game':
+
 
     def clientAction(self,command):
         print('segala yg dilakuin client')
