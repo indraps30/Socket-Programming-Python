@@ -22,6 +22,12 @@ def iudHint():
 	print('delete —— Menghapus')
 	print('back ———— Kembali')
 
+def hintGame():
+	print('add ———— menambahkan game')
+	print('start —— memulai game')
+	print('hint ——— menampilkan list command')
+	print('back ——— Kembali')
+
 # Untuk mengetahui sebuah string apakah bisa dijadikan int atau tidak
 def is_int(val):
     try:
@@ -138,7 +144,45 @@ def doCommand(command):
 		iudUser(command,subcommand)
 		# di sini beres
 	elif command=='game':
+		admin.sendall(command.encode('UTF-8'))
+		subcommand = input(prompt).lower()
+		admin.sendall(subcommand.encode('UTF-8'))
+		if subcommand=='hint':
+			hintGame()
+		elif subcommand=='add':
+			namaGame = input('nama game : ').lower()
+			admin.sendall(namaGame.encode('UTF-8'))
+			jmlClient = ''
+			while not is_int(jmlClient):
+				if jmlClient!='':
+					print('input harus angka!!!')
+				jmlClient = input('jumlah client : ')
+			admin.sendall(jmlClient.encode('UTF-8'))
+			jmlSesi = ''
+			while not is_int(jmlSesi):
+				if jmlSesi!='':
+					print('input harus angka!!!')
+				jmlSesi = input('jumlah sesi : ')
+			admin.sendall(jmlSesi.encode('UTF-8'))
+			print('masukkan jumlah orang yang lolos ke sesi berikutnya')
+			jmlSesiSebelumnya = jmlClient
+			for i in range(jmlSesi-2):
+				clientLolos = jmlSesiSebelumnya
+				while clientLolos==jmlSesiSebelumnya:
+					while not is_int(clientLolos):
+						if clientLolos!=jmlSesiSebelumnya:
+							print('input harus angka yang <'+str(jmlSesiSebelumnya)+'!!!')
+						clientLolos = input('sesi ke-'+str(i+1)+' : ')
+				admin.sendall(clientLolos.encode('UTF-8'))
+			jmlPertanyaan = ''
+			while not is_int(jmlPertanyaan):
+				if jmlSesi!='':
+					print('input harus angka!!!')
+				jmlPertanyaan = input('jumlah pertanyaan per sesi : ')
+			admin.sendall(jmlPertanyaan.encode('UTF-8'))
 		print('ngurusin game yang dilakukan')
+		elif subcommand=='start':
+			print('game dimulai!!!')
 	elif command=='soal':
 		admin.sendall(command.encode('UTF-8'))
 		print('show —— tampilkan jumlah soal yang sudah ada')
@@ -146,8 +190,7 @@ def doCommand(command):
 		subcommand = input(prompt).lower()
 		admin.sendall(subcommand.encode('UTF-8'))
 		if subcommand=='show':
-			# TODO: tunjukkan jumlah soal yang ada
-			print('sudah masuk show')
+			# menunjukkan jumlah soal yang ada
 			jmlSoal = admin.recv(2222).decode('UTF-8')
 			print('Jumlah soal : '+jmlSoal)
 			semuaSoal = admin.recv(2222).decode('UTF-8')

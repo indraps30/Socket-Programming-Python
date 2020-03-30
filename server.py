@@ -178,6 +178,23 @@ class UserThread(threading.Thread):
                 self.updateUserLogin()
             else:
                 print('command tidak ada!!!')
+        elif command=='game':
+            subcommand = self.usocket.recv(3048).decode()
+            self.updateGame()
+            if subcommand=='add':
+                temp = {}
+                temp['namaGame'] = self.usocket.recv(3048).decode()
+                temp['jmlClient'] = self.usocket.recv(3048).decode()
+                temp['jmlSesi'] = self.usocket.recv(3048).decode()
+                for i in range(temp['jmlSesi']-2):
+                    namaSesi = 'sesi_'+str(i+1)
+                    temp[namaSesi] = self.usocket.recv(3048).decode()
+                temp['sesi_'+str(temp['jmlSesi'])] = 1
+                temp['jmlPertanyaan'] = self.usocket.recv(3048).decode()
+                self.game.append(temp)
+            with open('game.json', 'w') as up:
+                json.dump(self.game, up, indent=2)
+            self.updateGame()
 
     def clientAction(self,command):
         print('segala yg dilakuin client')
