@@ -12,7 +12,7 @@ def hint():
 	print('admin ———— akun admin')
 	print('soal ————— soal')
 	print('game ————— game')
-	print('status ——— melihat berapa admin dan client yang konek ke server')
+	print('status ——— melihat berapa admin dan client yang connect ke server')
 	print('hint ————— menampilkan list command')
 	print('bye —————— disconnect dari server')
 
@@ -49,8 +49,8 @@ def iudUser(mainCommand,subcommand):
 				pwd = input('password : ')
 				admin.sendall(pwd.encode('UTF-8'))
 				print(mainCommand+' '+admin.recv(2222).decode('UTF-8'))
-			elif subcommand=='delete':
-				print('user '+mainCommand+' with username '+uname+' has been removed')
+			elif subcommand=='delete':                
+				print(uname + ' ' + admin.recv(2222).decode('UTF-8'))
 			else:
 				print('Error filtering subcommand!!!')
 		elif subcommand=='insert':

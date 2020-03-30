@@ -28,63 +28,63 @@ class UserThread(threading.Thread):
     def adminAction(self,command):
         if command=='client' or command=='admin':
             subcommand = self.usocket.recv(3048).decode()
-            self.updateUserLogin()
-            if subcommand=='insert' or subcommand=='update' or subcommand=='delete':
-                if subcommand=='update' or subcommand=='delete':
+            self.updateUserLogin()            
+            if subcommand=='insert' or subcommand=='update' or subcommand=='delete':                                                                                      
+                if subcommand=='delete':
                     srcUser = self.usocket.recv(3048).decode()
-                    print('Found : ')
-                    print('username : '+str(srcUser))
-                    for usr in self.userlogin[command]:
+                    temp1 = []                    
+                    print('siap menerima input delete')                                        
+                    isdeleted = 'Delete Failed'
+                    for usr in self.userlogin[command]:                                                                        
                         if usr['username']==srcUser:
-                            print('password : '+str(usr['password']))
-                            break
-                        self.userlogin[command]=usr
-                    if subcommand=='delete':
-                        for i in range(len(self.userlogin[command])):
-                            print('cek: '+self.userlogin[command]['username'])
-                            if self.userlogin[command]['username']==srcUser:
-                                del self.userlogin[command][i]
-                                break
-                        print('hasil hapusnya')
-                        print(self.userlogin[command])
-                        # lst = self.userlogin[command]
-                        # for i in range(len(lst)): 
-                        #     if lst[i]['username']==srcUser:
-                        #         del lst[i] 
-                        #         break
-                        # self.userlogin[command] = lst
-                        print('delete '+srcUser+' berhasil dilakukan')
-                    if subcommand=='update':
-                        print('siap menerima input update')
-                        pwd = self.usocket.recv(3048).decode()
-                        isupdated = 'Update Failed'
-                        for usr in self.userlogin[command]:
-                            if usr['username']==srcUser:
-                                usr['password'] = pwd
-                                isupdated = 'Updated'
-                                break
-                        self.usocket.send(isupdated.encode('UTF-8'))
-                    else:
-                        print('Error filtering subcommand!!!')
-                elif subcommand=='insert':
-                    temp = {}
+                            print('Found : ')
+                            print('username : '+str(srcUser))
+                            print('password lama: '+str(usr['password']))                            
+                            isdeleted = 'Deleted' 
+                        else:
+                            temp1.append(usr)                            
+                    self.userlogin[command] = temp1                                                         
+                    self.usocket.send(isdeleted.encode('UTF-8'))                    
+                    print('delete '+srcUser+' berhasil dilakukan')
+                elif subcommand=='update':
+                    srcUser = self.usocket.recv(3048).decode()
+                    temp1 = []                    
+                    print('siap menerima input update')                                        
+                    isupdated = 'Update Failed'
+                    for usr in self.userlogin[command]:                                                                        
+                        if usr['username']==srcUser:                            
+                            print('Found : ')
+                            print('username : '+str(srcUser))                             
+                            print('password lama: '+str(usr['password']))
+                            #password baru
+                            pwd = self.usocket.recv(3048).decode() 
+                            print('password baru:'+str(pwd))
+                            usr['password'] = pwd                            
+                            isupdated = 'Updated'                            
+                        temp1.append(usr)                        
+                    self.userlogin[command] = temp1                                                         
+                    self.usocket.send(isupdated.encode('UTF-8'))                    
+                elif subcommand=='insert':                    
+                    temp = {}                    
                     uname = self.usocket.recv(3048).decode()
                     pwd = self.usocket.recv(3048).decode()
                     check = 'insert berhasil'
                     for usr in self.userlogin[command]:
                         if usr['username']==uname:
-                            check = 'username sudah ada!!!'
-                            break
+                            check = 'username sudah ada!!!' 
+                            break                                              
                     if check=='insert berhasil':
                         temp['username'] = uname
                         temp['password'] = pwd
                     self.usocket.send(check.encode('UTF-8'))
                     self.userlogin[command].append(temp)
                     print(check)
+                else:
+                    print('Error filtering subcommand!!!')
                 print(self.userlogin['client'])
                 with open('users.json', 'w') as up:
                     json.dump(self.userlogin, up, indent=2)
-                self.updateUserLogin()
+                self.updateUserLogin()                
         elif command=='status':
             admStat = 'now connected admin = '+ str(len(user_connected['admin']))
             self.usocket.send(admStat.encode('UTF-8'))
@@ -220,6 +220,7 @@ class UserThread(threading.Thread):
                 self.usocket.send(bytes(lstatus,'UTF-8'))
             msg = self.usocket.recv(3048).decode('UTF-8')
             while msg!='bye':
+                print('pesannya adalah ', msg)
                 if role=='admin':
                     self.adminAction(msg)
                 elif role=='client':

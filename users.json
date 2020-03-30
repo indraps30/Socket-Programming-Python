@@ -15,32 +15,17 @@
   ],
   "client": [
     {
-      "username": "bakso",
-      "password": "kuaci"
+      "username": "jajang",
+      "password": "jajangku"
     },
     {
-      "username": "rumah",
-      "password": "belidong"
+      "username": "jajang2",
+      "password": "jajangmu"
     },
     {
-      "username": "tahu",
-      "password": "paan"
+      "username": "jajang3",
+      "password": "jajangmu"
     },
-    {
-      "username": "ujang",
-      "password": "belisayur"
-    },
-    {
-      "username": "ketan",
-      "password": "bakar"
-    },
-    {
-      "username": "karung",
-      "password": "sarden"
-    },
-    {
-      "username": "pepperoni",
-      "password": "kentang"
-    }
+    {}
   ]
 }
