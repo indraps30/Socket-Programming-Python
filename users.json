@@ -11,12 +11,20 @@
     {
       "username": "adam",
       "password": "minyaknabati"
+    },
+    {
+      "username": "adminjajang",
+      "password": "jajangmuah"
+    },
+    {
+      "username": "a",
+      "password": "a"
     }
   ],
   "client": [
     {
       "username": "jajang",
-      "password": "jajangku"
+      "password": "nana"
     },
     {
       "username": "jajang2",
@@ -25,7 +33,6 @@
     {
       "username": "jajang3",
       "password": "jajangmu"
-    },
-    {}
+    }
   ]
 }

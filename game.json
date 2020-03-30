@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "namaGame": "a",
+    "jmlClient": 5,
+    "jmlSesi": 3,
+    "sesi_1": 3,
+    "sesi_3": 1,
+    "jmlPertanyaan": "2"
+  }
+]

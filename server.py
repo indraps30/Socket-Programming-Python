@@ -69,16 +69,15 @@ class UserThread(threading.Thread):
                     uname = self.usocket.recv(3048).decode()
                     pwd = self.usocket.recv(3048).decode()
                     check = 'insert berhasil'
-                    for usr in self.userlogin[command]:
-                        if usr['username']==uname:
+                    for usr in self.userlogin[command]:                        
+                        if usr['username']==uname:                            
                             check = 'username sudah ada!!!' 
                             break                                              
                     if check=='insert berhasil':
                         temp['username'] = uname
                         temp['password'] = pwd
-                    self.usocket.send(check.encode('UTF-8'))
-                    self.userlogin[command].append(temp)
-                    print(check)
+                        self.userlogin[command].append(temp)
+                    self.usocket.send(check.encode('UTF-8'))                    
                 else:
                     print('Error filtering subcommand!!!')
                 print(self.userlogin['client'])
@@ -184,14 +183,15 @@ class UserThread(threading.Thread):
             if subcommand=='add':
                 temp = {}
                 temp['namaGame'] = self.usocket.recv(3048).decode()
-                temp['jmlClient'] = self.usocket.recv(3048).decode()
-                temp['jmlSesi'] = self.usocket.recv(3048).decode()
+                temp['jmlClient'] = int(self.usocket.recv(3048).decode())
+                temp['jmlSesi'] = int(self.usocket.recv(3048).decode())
                 for i in range(temp['jmlSesi']-2):
                     namaSesi = 'sesi_'+str(i+1)
-                    temp[namaSesi] = self.usocket.recv(3048).decode()
+                    temp[namaSesi] = int(self.usocket.recv(3048).decode())
                 temp['sesi_'+str(temp['jmlSesi'])] = 1
                 temp['jmlPertanyaan'] = self.usocket.recv(3048).decode()
                 self.game.append(temp)
+                print(temp)
             with open('game.json', 'w') as up:
                 json.dump(self.game, up, indent=2)
             self.updateGame()
@@ -219,8 +219,7 @@ class UserThread(threading.Thread):
                 print('status : '+lstatus)
                 self.usocket.send(bytes(lstatus,'UTF-8'))
             msg = self.usocket.recv(3048).decode('UTF-8')
-            while msg!='bye':
-                print('pesannya adalah ', msg)
+            while msg!='bye':                
                 if role=='admin':
                     self.adminAction(msg)
                 elif role=='client':
