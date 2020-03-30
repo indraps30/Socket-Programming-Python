@@ -8,19 +8,27 @@ running = 1
 prompt = ''
 # menjelaskan cara menggunakan command-command yang ada
 def hint():
-	print('Masukkan client untuk menangani akun client')
-	print('Masukkan admin untuk menangani akun admin')
-	print('Masukkan soal untuk menagnani soal')
-	print('Masukkan game untuk menangani game')
-	print('Masukkan status untuk melihat berapa admin dan client yang konek ke server')
-	print('Masukkan hint untuk menampilkan list command')
-	print('Masukkan bye untuk disconnect dari server')
+	print('client ——— akun client')
+	print('admin ———— akun admin')
+	print('soal ————— soal')
+	print('game ————— game')
+	print('status ——— melihat berapa admin dan client yang konek ke server')
+	print('hint ————— menampilkan list command')
+	print('bye —————— disconnect dari server')
 
 def iudHint():
 	print('insert —— Menambahkan')
 	print('update —— Mengupdate')
 	print('delete —— Menghapus')
 	print('back ———— Kembali')
+
+# Untuk mengetahui sebuah string apakah bisa dijadikan int atau tidak
+def is_int(val):
+    try:
+        int(val)
+    except ValueError:
+        return False
+    return True
 
 def iudUser(mainCommand,subcommand):
 	if subcommand=='hint':
@@ -34,7 +42,7 @@ def iudUser(mainCommand,subcommand):
 			if subcommand=='update':
 				pwd = input('password : ')
 				admin.sendall(pwd.encode('UTF-8'))
-				print(mainCommand+ admin.recv(2222).decode('UTF-8'))
+				print(mainCommand+' '+admin.recv(2222).decode('UTF-8'))
 			elif subcommand=='delete':
 				print('user '+mainCommand+' with username '+uname+' has been removed')
 			else:
@@ -44,6 +52,81 @@ def iudUser(mainCommand,subcommand):
 			pwd = input('password : ')
 			admin.sendall(uname.encode('UTF-8'))
 			admin.sendall(pwd.encode('UTF-8'))
+			print(admin.recv(2222).decode('UTF-8'))
+	elif subcommand=='back':
+		print('going back')
+	else:
+		print('command tidak tersedia')
+
+def iudSoal(mainCommand,subcommand):
+	if subcommand=='hint':
+		iudHint()
+	elif subcommand=='insert'or subcommand=='update' or subcommand=='delete':
+# 		admin.sendall(mainCommand.encode('UTF-8'))
+# 		admin.sendall(subcommand.encode('UTF-8'))
+		if subcommand=='update' or subcommand=='delete':
+			no = ''
+			while not is_int(no):
+				if no!='':
+					print('Input harus angka')
+				no = input('no : ')
+			admin.sendall(no.encode('UTF-8'))
+			if subcommand=='update':
+				soal = input('soal : ')
+				admin.sendall(soal.encode('UTF-8'))
+				nilai = ''
+				while not is_int(nilai):
+					if nilai!='':
+						print('input harus angka!!!')
+					nilai = input('nilai : ')
+				admin.sendall(nilai.encode('UTF-8'))
+				A = input('A : ')
+				admin.sendall(A.encode('UTF-8'))
+				B = input('B : ')
+				admin.sendall(B.encode('UTF-8'))
+				C = input('C : ')
+				admin.sendall(C.encode('UTF-8'))
+				D = input('D : ')
+				admin.sendall(D.encode('UTF-8'))
+				kunjaw = input('kunci jawaban(A/B/C/D) : ').upper()				
+				while kunjaw!='A' and kunjaw!='B' and kunjaw!='C' and kunjaw!='D':
+					print('input harus A/B/C/D')
+					kunjaw = input('kunci jawaban(A/B/C/D) : ').upper()
+				admin.sendall(kunjaw.encode('UTF-8'))
+				print(mainCommand+' '+admin.recv(2222).decode('UTF-8'))
+			elif subcommand=='delete':
+				print('user '+mainCommand+' with no '+no+' has been removed')
+			else:
+				print('Error filtering subcommand!!!')
+		elif subcommand=='insert':
+			no = ''
+			while not is_int(no):
+				if no!='':
+					print('Input harus angka')
+				no = input('no : ')
+			admin.sendall(no.encode('UTF-8'))
+			soal = input('soal : ')
+			admin.sendall(soal.encode('UTF-8'))
+			nilai = input('nilai : ')
+			while not is_int(nilai):
+				if nilai!='':
+					print('input harus angka!!!')
+				nilai = input('nilai : ')
+			admin.sendall(nilai.encode('UTF-8'))
+			A = input('A : ')
+			admin.sendall(A.encode('UTF-8'))
+			B = input('B : ')
+			admin.sendall(B.encode('UTF-8'))
+			C = input('C : ')
+			admin.sendall(C.encode('UTF-8'))
+			D = input('D : ')
+			admin.sendall(D.encode('UTF-8'))
+			kunjaw = ''
+			while kunjaw!='A' and kunjaw!='B' and kunjaw!='C' and kunjaw!='D':
+				if kunjaw!='':
+					print('input harus A/B/C/D')
+				kunjaw = input('kunci jawaban(A/B/C/D) : ').upper()
+			admin.sendall(kunjaw.encode('UTF-8'))
 			print(admin.recv(2222).decode('UTF-8'))
 	elif subcommand=='back':
 		print('going back')
@@ -63,14 +146,20 @@ def doCommand(command):
 	elif command=='game':
 		print('ngurusin game yang dilakukan')
 	elif command=='soal':
+		admin.sendall(command.encode('UTF-8'))
 		print('show —— tampilkan jumlah soal yang sudah ada')
 		iudHint()
 		subcommand = input(prompt).lower()
+		admin.sendall(subcommand.encode('UTF-8'))
 		if subcommand=='show':
 			# TODO: tunjukkan jumlah soal yang ada
-			print('berhasil masuk ke '+str(command)+'——>'+subcommand)
+			print('sudah masuk show')
+			jmlSoal = admin.recv(2222).decode('UTF-8')
+			print('Jumlah soal : '+jmlSoal)
+			semuaSoal = admin.recv(2222).decode('UTF-8')
+			print(semuaSoal)
 		else:
-			iudUser(command,subcommand)
+			iudSoal(command,subcommand)
 	elif command=='status':
 		admin.sendall(command.encode('UTF-8'))
 		admStat = admin.recv(2222).decode('UTF-8')

@@ -1,22 +1,52 @@
 [
-	{
-		"no": 1,
-		"soal": "Minum air pake...",
-		"nilai": 70,
-		"A": "Tangan",
-		"B": "Gelas",
-		"C": "Air",
-		"D": "Mulut",
-		"kunci_jawaban": "C"
-	},
-	{
-		"no": 2,
-		"soal": "Budi punya 15 kelereng, 6 kelereng dikasih ke Anto, 8 kelereng dimasak ibu. Pertanyaannya siapakah Junaedi?",
-		"nilai": 5,
-		"A": "Pelayan toko",
-		"B": "Kuli bangunan",
-		"C": "Penjual bakso",
-		"D": "Kelereng terakhir Anto",
-		"kunci_jawaban": "D"
-	}
+  {
+    "no": 1,
+    "soal": "Minum air pake...",
+    "nilai": 70,
+    "A": "Tangan",
+    "B": "Gelas",
+    "C": "Air",
+    "D": "Mulut",
+    "kunci_jawaban": "C"
+  },
+  {
+    "no": 2,
+    "soal": "Budi punya 15 kelereng, 6 kelereng dikasih ke Anto, 8 kelereng dimasak ibu. Pertanyaannya siapakah Junaedi?",
+    "nilai": 5,
+    "A": "Pelayan toko",
+    "B": "Kuli bangunan",
+    "C": "Penjual bakso",
+    "D": "Kelereng terakhir Anto",
+    "kunci_jawaban": "D"
+  },
+  {
+    "no": 3,
+    "soal": "1+200=...",
+    "nilai": 32,
+    "A": "202",
+    "B": "201",
+    "C": "301",
+    "D": "302",
+    "kunci_jawaban": "B"
+  },
+  {
+    "no": 4,
+    "soal": "Sebutkan jawaban dari 2+3!",
+    "nilai": 5,
+    "A": "5",
+    "B": "6",
+    "C": "7",
+    "D": "8",
+    "kunci_jawaban": "D"
+  },
+  {
+    "no": 6,
+    "soal": "Lebih besar p... daripada t...",
+    "nilai": 25,
+    "A": "penjara, terong",
+    "B": "pasar, tahu",
+    "C": "padi, tinja",
+    "D": "pasak, tiang",
+    "kunci_jawaban": "D"
+  }
 ]
