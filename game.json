@@ -1,13 +1,17 @@
 [
   {
-    "namaGame": "mandi bakso",
-    "jmlClient": 10,
-    "jmlSesi": 5,
-    "sesi_1": 7,
-    "sesi_2": 5,
-    "sesi_3": 3,
-    "sesi_4": 2,
-    "sesi_5": 1,
-    "jmlPertanyaan": "3"
+    "namaGame": "anak normal",
+    "jmlClient": 3,
+    "jmlPertanyaan": 4
+  },
+  {
+    "namaGame": "terpuruk",
+    "jmlClient": 3,
+    "jmlPertanyaan": 2
+  },
+  {
+    "namaGame": "gayung",
+    "jmlClient": 3,
+    "jmlPertanyaan": 6
   }
 ]

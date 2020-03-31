@@ -58,5 +58,25 @@
     "C": "kakek",
     "D": "orang",
     "kunci_jawaban": "A"
+  },
+  {
+    "no": 7,
+    "soal": "gambar pasti...",
+    "nilai": 30,
+    "A": "ada",
+    "B": "bau",
+    "C": "dibuat",
+    "D": "dijilat",
+    "kunci_jawaban": "C"
+  },
+  {
+    "no": 8,
+    "soal": "ketika sepeda digoes",
+    "nilai": 40,
+    "A": "pasti maju",
+    "B": "pasti gerak",
+    "C": "pasti muter",
+    "D": "pasti ada yang ngegoes",
+    "kunci_jawaban": "D"
   }
 ]

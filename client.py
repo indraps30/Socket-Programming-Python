@@ -7,6 +7,7 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((SERVER, PORT))
 role = 'client'
 prompt = ''
+score = 0
 # Timer pengerjaan per soal
 # TODO: waktu pengerjaan diupdate ketika selesai menjawab
 waktu_pengerjaan = 0.00
@@ -34,19 +35,19 @@ while True:
 		lstatus = client.recv(2222).decode('UTF-8')
 		print(lstatus)
 	print('Menunggu semua client konek...')
-	isStart = client.recv(2222).decode('UTF-8')
-	if isStart=='start':
-		print('game started')
-	else:
-		break
+	print('game started')
 	prompt = str(role)+'@'+str(username)+'——>'
 	command = ''
 	print('jawaban dengan A/B/C/D')
+	print(command)
+	print(command!='bye')
 	while command!='bye':
-		print(client.recv(2222).decode('UTF-8'))
+		x = client.recv(2222).decode('UTF-8')
+		print(x)
 		while command!='A' and command!='B' and command!='C' and command!='D':
 			print('jawaban hanya A/B/C/D')
 			command = input(prompt).upper()
+			score += int(client.recv(2222).decode('UTF-8'))
 		else:
 			client.sendall(command.encode('UTF-8'))
 		command = input(prompt).upper()

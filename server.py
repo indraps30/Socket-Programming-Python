@@ -3,9 +3,6 @@ import json
 from random import seed
 from random import randint
 user_connected = {"admin":[],"client":[]}
-game_start = False
-gameDetail = {}
-no_soal = []
 class UserThread(threading.Thread):
     def __init__(self,userAddress,usersocket):
         threading.Thread.__init__(self)
@@ -14,6 +11,7 @@ class UserThread(threading.Thread):
         self.userlogin = {}
         self.soal = {}
         self.game = {}
+        self.info = {}
 
     def updateUserLogin(self):
         with open('users.json') as u:
@@ -26,6 +24,10 @@ class UserThread(threading.Thread):
     def updateGame(self):
         with open('game.json') as g:
             self.game = json.load(g)
+
+    def updateInfo(self):
+        with open('info.json') as sh:
+            self.info = json.load(sh)
 
     def adminAction(self,command):
         if command=='client' or command=='admin':
@@ -82,7 +84,6 @@ class UserThread(threading.Thread):
                     self.usocket.send(check.encode('UTF-8'))                    
                 else:
                     print('Error filtering subcommand!!!')
-                print(self.userlogin['client'])
                 with open('users.json', 'w') as up:
                     json.dump(self.userlogin, up, indent=2)
                 self.updateUserLogin()                
@@ -128,6 +129,8 @@ class UserThread(threading.Thread):
                         self.soal=s
                     if subcommand=='delete':
                         print('belom dibikin')
+                        # TODO: hapus soal yang dicari
+                        # TODO: ubah seluruh nomor yang ada di setelah nomor itu
                     if subcommand=='update':
                         print('siap menerima input update')
                         soal = self.usocket.recv(3048).decode()
@@ -185,19 +188,18 @@ class UserThread(threading.Thread):
                 temp = {}
                 temp['namaGame'] = self.usocket.recv(3048).decode()
                 temp['jmlClient'] = int(self.usocket.recv(3048).decode())
-                temp['jmlSesi'] = int(self.usocket.recv(3048).decode())
-                for i in range(temp['jmlSesi']-1):
-                    namaSesi = 'sesi_'+str(i+1)
-                    temp[namaSesi] = int(self.usocket.recv(3048).decode())
-                temp['sesi_'+str(temp['jmlSesi'])] = 1
-                temp['jmlPertanyaan'] = self.usocket.recv(3048).decode()
+                temp['jmlPertanyaan'] = int(self.usocket.recv(3048).decode())
                 self.game.append(temp)
                 with open('game.json', 'w') as up:
                     json.dump(self.game, up, indent=2)
             elif subcommand=='start':
                 self.updateGame()
+                listGame = ''
+                game_start = False
+                gameDetail = {}
+                no_soal = []
                 for nama in self.game:
-                    listGame = str(nama['namaGame'])+'\n'
+                    listGame += str(nama['namaGame'])+'\n'
                 self.usocket.send(listGame.encode('UTF-8'))
                 namaGame = self.usocket.recv(3048).decode()
                 game_start = False
@@ -212,26 +214,41 @@ class UserThread(threading.Thread):
                     self.usocket.send('Game dimulai!!!'.encode('UTF-8'))
                     seed(1)
                     self.updateSoal()
-                    for _ in range(gameDetail['jmlSesi']):
+                    for _ in range(gameDetail['jmlPertanyaan']):
                         value = randint(1, len(self.soal))
                         no_soal.append(value)
+                self.info['game_start'] = game_start
+                self.info['jmlClient'] = gameDetail['jmlClient']
+                self.info['no_soal'] = no_soal
+                with open('info.json', 'w') as up:
+                    json.dump(self.info, up, indent=2)
             self.updateGame()
 
     def clientAction(self,command):
+        self.updateInfo()
         jml_client_sekarang = len(user_connected['client'])
-        if game_start:
-            self.usocket.send('start'.encode('UTF-8'))
+        print('sekarang show info game_start')
+        print(self.info['game_start'])
+        bacaSoal = {}
+        if self.info['game_start']:
             self.updateSoal()
-        while game_start:
-            # TODO: untuk setiap sesinya
-            for i in range(len(no_soal)):
+            for i in range(len(self.info['no_soal'])):
+                print('looping soal')
+                bacaSoal = self.soal[i]
                 soalnya = ''
-                soalnya += self.soal['soal']+'\n'
-                soalnya += 'A.'+self.soal['A']+'\n'
-                soalnya += 'B.'+self.soal['B']+'\n'
-                soalnya += 'C.'+self.soal['C']+'\n'
-                soalnya += 'D.'+self.soal['D']+'\n'
+                soalnya += bacaSoal['soal']+'\n'
+                soalnya += 'A.'+bacaSoal['A']+'\n'
+                soalnya += 'B.'+bacaSoal['B']+'\n'
+                soalnya += 'C.'+bacaSoal['C']+'\n'
+                soalnya += 'D.'+bacaSoal['D']+'\n'
+                print('soalnya')
+                print(soalnya)
                 self.usocket.send(soalnya.encode('UTF-8'))
+                jawaban = self.usocket.recv(3048).decode()
+                if bacaSoal['kunci_jawaban']==jawaban:
+                    self.usocket.send(str(bacaSoal['nilai']).encode('UTF-8'))
+                else:
+                    self.usocket.send('0'.encode('UTF-8'))
 
     def run(self):
         print ("New Connection from : ", userAddress)
