@@ -158,6 +158,7 @@ def doCommand(command):
 					print('input harus angka!!!')
 				jmlClient = input('jumlah client : ')
 			admin.sendall(jmlClient.encode('UTF-8'))
+			jmlClient = int(jmlClient)
 			jmlSesi = ''
 			while not is_int(jmlSesi):
 				if jmlSesi!='':
@@ -167,18 +168,15 @@ def doCommand(command):
 			jmlSesi = int(jmlSesi)
 			print('masukkan jumlah orang yang lolos ke sesi berikutnya')
 			jmlSesiSebelumnya = jmlClient
-			for i in range(jmlSesi-2):
-				print(i)
+			for i in range(jmlSesi-1):
 				clientLolos = jmlSesiSebelumnya
-				while clientLolos >= jmlSesiSebelumnya:
-					print('Hai')
-					if clientLolos!=jmlSesiSebelumnya:
-						print('input harus angka yang <'+str(jmlSesiSebelumnya)+'!!!')
-					clientLolos = input('sesi ke-'+str(i+1)+' : ')
-				admin.sendall(clientLolos.encode('UTF-8'))
+				while clientLolos>=jmlSesiSebelumnya:
+					clientLolos = int(input('sesi ke-'+str(i+1)+' : '))
+				admin.sendall(str(clientLolos).encode('UTF-8'))
+				jmlSesiSebelumnya = clientLolos
 			jmlPertanyaan = ''
 			while not is_int(jmlPertanyaan):
-				if jmlSesi!='':
+				if jmlPertanyaan!='':
 					print('input harus angka!!!')
 				jmlPertanyaan = input('jumlah pertanyaan per sesi : ')
 			admin.sendall(jmlPertanyaan.encode('UTF-8'))		

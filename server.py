@@ -155,7 +155,7 @@ class UserThread(threading.Thread):
                 elif subcommand=='insert':
                     temp = {}
                     # nomor soal otomatis
-                    no = len(self.soal)
+                    no = len(self.soal)+1
                     temp['no'] = no
                     soal = self.usocket.recv(3048).decode()
                     temp['soal'] = soal
@@ -187,16 +187,16 @@ class UserThread(threading.Thread):
                 temp['namaGame'] = self.usocket.recv(3048).decode()
                 temp['jmlClient'] = int(self.usocket.recv(3048).decode())
                 temp['jmlSesi'] = int(self.usocket.recv(3048).decode())
-                for i in range(temp['jmlSesi']-2):
+                for i in range(temp['jmlSesi']-1):
                     namaSesi = 'sesi_'+str(i+1)
                     temp[namaSesi] = int(self.usocket.recv(3048).decode())
                 temp['sesi_'+str(temp['jmlSesi'])] = 1
                 temp['jmlPertanyaan'] = self.usocket.recv(3048).decode()
                 self.game.append(temp)
-                print(temp)
                 with open('game.json', 'w') as up:
                     json.dump(self.game, up, indent=2)
             elif subcommand=='start':
+                self.updateGame()
                 for nama in self.game:
                     listGame = str(nama['namaGame'])+'\n'
                 self.usocket.send(listGame.encode('UTF-8'))
@@ -219,7 +219,6 @@ class UserThread(threading.Thread):
             self.updateGame()
 
     def clientAction(self,command):
-        print('segala yg dilakuin client')
         jml_client_sekarang = len(user_connected['client'])
         if game_start:
             self.usocket.send('start'.encode('UTF-8'))

@@ -1,10 +1,13 @@
 [
   {
-    "namaGame": "a",
-    "jmlClient": 5,
-    "jmlSesi": 3,
-    "sesi_1": 3,
-    "sesi_3": 1,
-    "jmlPertanyaan": "2"
+    "namaGame": "mandi bakso",
+    "jmlClient": 10,
+    "jmlSesi": 5,
+    "sesi_1": 7,
+    "sesi_2": 5,
+    "sesi_3": 3,
+    "sesi_4": 2,
+    "sesi_5": 1,
+    "jmlPertanyaan": "3"
   }
 ]
