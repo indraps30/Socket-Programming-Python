@@ -48,5 +48,15 @@
     "C": "padi, tinja",
     "D": "pasak, tiang",
     "kunci_jawaban": "D"
+  },
+  {
+    "no": 6,
+    "soal": "jokowi itu",
+    "nilai": 30,
+    "A": "presiden",
+    "B": "bapak",
+    "C": "kakek",
+    "D": "orang",
+    "kunci_jawaban": "A"
   }
 ]

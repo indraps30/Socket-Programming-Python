@@ -173,7 +173,6 @@ class UserThread(threading.Thread):
                     temp['kunci_jawaban'] = kunjaw
                     self.usocket.send('insert berhasil'.encode('UTF-8'))
                     self.soal.append(temp)
-                    print(check)
                 with open('soal.json', 'w') as up:
                     json.dump(self.soal, up, indent=2)
                 self.updateUserLogin()
