@@ -1,8 +1,11 @@
 import socket, threading
 import json
-
-user_connected={"admin":[],"client":[]}
-
+from random import seed
+from random import randint
+user_connected = {"admin":[],"client":[]}
+game_start = False
+gameDetail = {}
+no_soal = []
 class UserThread(threading.Thread):
     def __init__(self,userAddress,usersocket):
         threading.Thread.__init__(self)
@@ -11,7 +14,6 @@ class UserThread(threading.Thread):
         self.userlogin = {}
         self.soal = {}
         self.game = {}
-        print ("New connection added: ", userAddress)
 
     def updateUserLogin(self):
         with open('users.json') as u:
@@ -192,15 +194,49 @@ class UserThread(threading.Thread):
                 temp['jmlPertanyaan'] = self.usocket.recv(3048).decode()
                 self.game.append(temp)
                 print(temp)
-            with open('game.json', 'w') as up:
-                json.dump(self.game, up, indent=2)
+                with open('game.json', 'w') as up:
+                    json.dump(self.game, up, indent=2)
+            elif subcommand=='start':
+                for nama in self.game:
+                    listGame = str(nama['namaGame'])+'\n'
+                self.usocket.send(listGame.encode('UTF-8'))
+                namaGame = self.usocket.recv(3048).decode()
+                game_start = False
+                for nama in self.game:
+                    if nama['namaGame']==namaGame:
+                        gameDetail = nama
+                        game_start = True
+                        break
+                if not game_start:
+                    self.usocket.send('Game tidak ada!!!'.encode('UTF-8'))
+                else:
+                    self.usocket.send('Game dimulai!!!'.encode('UTF-8'))
+                    seed(1)
+                    self.updateSoal()
+                    for _ in range(gameDetail['jmlSesi']):
+                        value = randint(1, len(self.soal))
+                        no_soal.append(value)
             self.updateGame()
 
     def clientAction(self,command):
         print('segala yg dilakuin client')
+        jml_client_sekarang = len(user_connected['client'])
+        if game_start:
+            self.usocket.send('start'.encode('UTF-8'))
+            self.updateSoal()
+        while game_start:
+            # TODO: untuk setiap sesinya
+            for i in range(len(no_soal)):
+                soalnya = ''
+                soalnya += self.soal['soal']+'\n'
+                soalnya += 'A.'+self.soal['A']+'\n'
+                soalnya += 'B.'+self.soal['B']+'\n'
+                soalnya += 'C.'+self.soal['C']+'\n'
+                soalnya += 'D.'+self.soal['D']+'\n'
+                self.usocket.send(soalnya.encode('UTF-8'))
 
     def run(self):
-        print ("Connection from : ", userAddress)
+        print ("New Connection from : ", userAddress)
         lstatus = 'Login required'
         msg = ''
         while True:
@@ -209,7 +245,6 @@ class UserThread(threading.Thread):
             connected_temp = {}
             connected_temp['userAddress'] = self.uAddress
             connected_temp['userSocket'] = self.usocket
-            user_connected[role].append(connected_temp)
             while lstatus!='Logged in':
                 username = self.usocket.recv(3048).decode()
                 password = self.usocket.recv(3048).decode()
@@ -218,17 +253,18 @@ class UserThread(threading.Thread):
                         lstatus = 'Logged in'
                 print('status : '+lstatus)
                 self.usocket.send(bytes(lstatus,'UTF-8'))
-            msg = self.usocket.recv(3048).decode('UTF-8')
-            while msg!='bye':                
+            connected_temp['username'] = username
+            user_connected[role].append(connected_temp)
+            msg = ''
+            while msg!='bye':
                 if role=='admin':
                     self.adminAction(msg)
                 elif role=='client':
                     self.clientAction(msg)
                 msg = self.usocket.recv(3048).decode('UTF-8')
             else:
-                # hapus dari dictionary
+                # hapus dictionary
                 user_connected[role].remove(connected_temp)
-                print('setelah out')
                 break
             print ("from client", msg)
             self.usocket.send(msg.encode('UTF-8'))

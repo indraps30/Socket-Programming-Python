@@ -4,7 +4,6 @@ PORT = 49091
 admin = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 admin.connect((SERVER, PORT))
 role = 'admin'
-running = 1
 prompt = ''
 # menjelaskan cara menggunakan command-command yang ada
 def hint():
@@ -145,6 +144,7 @@ def doCommand(command):
 		# di sini beres
 	elif command=='game':
 		admin.sendall(command.encode('UTF-8'))
+		hintGame()
 		subcommand = input(prompt).lower()
 		admin.sendall(subcommand.encode('UTF-8'))
 		if subcommand=='hint':
@@ -183,7 +183,14 @@ def doCommand(command):
 				jmlPertanyaan = input('jumlah pertanyaan per sesi : ')
 			admin.sendall(jmlPertanyaan.encode('UTF-8'))		
 		elif subcommand=='start':
-			print('game dimulai!!!')
+			print('masukkan nama game yang ingin dimulai')
+			print('game yang sudah ada:')
+			print(admin.recv(2222).decode('UTF-8'))
+			namaGame = input('nama game : ')
+			admin.sendall(namaGame.encode('UTF-8'))
+			print(admin.recv(2222).decode('UTF-8'))
+		elif subcommand=='back':
+			print('going back')
 	elif command=='soal':
 		admin.sendall(command.encode('UTF-8'))
 		print('show —— tampilkan jumlah soal yang sudah ada')
@@ -207,7 +214,7 @@ def doCommand(command):
 	else:
 		print('command tidak tersedia')
 
-while running==1:
+while True:
 	lstatus = 'Login required'
 	admin.sendall(role.encode('UTF-8'))
 	while lstatus!='Logged in':
@@ -223,7 +230,7 @@ while running==1:
 	while command!='bye':
 		doCommand(command)
 		command = input(prompt).lower()
-	running=0
+	break
 admin.sendall('bye'.encode('UTF-8'))
 print('logged out')
 admin.close()
