@@ -1,12 +1,9 @@
 {
   "game_start": true,
-  "jmlClient": 3,
+  "jmlClient": 4,
   "no_soal": [
     3,
     2,
-    5,
-    2,
-    8,
-    8
+    5
   ]
 }

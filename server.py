@@ -28,6 +28,10 @@ class UserThread(threading.Thread):
     def updateInfo(self):
         with open('info.json') as sh:
             self.info = json.load(sh)
+            
+    def updateScore(self):
+        with open('score.json') as sc:
+            self.score = json.load(sc)
 
     def adminAction(self,command):
         if command=='client' or command=='admin':
@@ -179,12 +183,12 @@ class UserThread(threading.Thread):
                     kunjaw = self.usocket.recv(3048).decode()
                     temp['kunci_jawaban'] = kunjaw
                     self.usocket.send('insert berhasil'.encode('UTF-8'))
-                    self.soal.append(temp)								                    
+                    self.soal.append(temp)                                                    
                 else:
                     print('Error filtering subcommand!!!')
                 with open('soal.json', 'w') as up:
                     json.dump(self.soal, up, indent=2)
-                self.updateUserLogin()				                   
+                self.updateUserLogin()                                   
             else:
                 print('command tidak ada!!!')
         elif command=='game':
@@ -232,29 +236,37 @@ class UserThread(threading.Thread):
 
     def clientAction(self,command):
         self.updateInfo()
-        jml_client_sekarang = len(user_connected['client'])
-        print('sekarang show info game_start')
-        print(self.info['game_start'])
-        bacaSoal = {}
-        if self.info['game_start']:
-            self.updateSoal()
-            for i in range(len(self.info['no_soal'])):
-                print('looping soal')
-                bacaSoal = self.soal[i]
-                soalnya = ''
-                soalnya += bacaSoal['soal']+'\n'
-                soalnya += 'A.'+bacaSoal['A']+'\n'
-                soalnya += 'B.'+bacaSoal['B']+'\n'
-                soalnya += 'C.'+bacaSoal['C']+'\n'
-                soalnya += 'D.'+bacaSoal['D']+'\n'
-                print('soalnya')
-                print(soalnya)
-                self.usocket.send(soalnya.encode('UTF-8'))
-                jawaban = self.usocket.recv(3048).decode()
-                if bacaSoal['kunci_jawaban']==jawaban:
-                    self.usocket.send(str(bacaSoal['nilai']).encode('UTF-8'))
-                else:
-                    self.usocket.send('0'.encode('UTF-8'))
+        jml_admin_sekarang = len(user_connected['admin'])
+        jml_client_sekarang = len(user_connected['client'])        
+        temp = {}        
+        if jml_admin_sekarang == 0:
+            self.info.dump(temp)
+        else:            
+            self.usocket.send('Menunggu semua client connect ke server'.encode('UTF-8'))
+            while jml_client_sekarang < self.info['jmlClient'] and self.info['game_start'] == False:
+                jml_client_sekarang = len(user_connected['client'])                
+                self.updateInfo()
+            else:
+                self.info['game_start'] = True
+                self.usocket.send('Game started!!!'.encode('UTF-8'))
+                self.usocket.send(str(len(self.info['no_soal'])).encode('UTF-8'))
+                bacaSoal = {}
+                if self.info['game_start']:
+                    self.updateSoal()
+                    for i in range(len(self.info['no_soal'])):                    
+                        bacaSoal = self.soal[i]
+                        soalnya = ''
+                        soalnya += bacaSoal['soal']+'\n'
+                        soalnya += 'A.'+bacaSoal['A']+'\n'
+                        soalnya += 'B.'+bacaSoal['B']+'\n'
+                        soalnya += 'C.'+bacaSoal['C']+'\n'
+                        soalnya += 'D.'+bacaSoal['D']+'\n'                        
+                        self.usocket.send(soalnya.encode('UTF-8'))
+                        jawaban = self.usocket.recv(3048).decode()
+                        if bacaSoal['kunci_jawaban']==jawaban:
+                            self.usocket.send(str(bacaSoal['nilai']).encode('UTF-8'))
+                        else:
+                            self.usocket.send('0'.encode('UTF-8'))                    
 
     def run(self):
         print ("New Connection from : ", userAddress)

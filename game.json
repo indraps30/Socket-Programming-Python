@@ -13,5 +13,10 @@
     "namaGame": "gayung",
     "jmlClient": 3,
     "jmlPertanyaan": 6
+  },
+  {
+    "namaGame": "test",
+    "jmlClient": 4,
+    "jmlPertanyaan": 3
   }
 ]

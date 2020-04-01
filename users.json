@@ -45,6 +45,10 @@
     {
       "username": "tulang",
       "password": "lang"
+    },
+    {
+      "username": "test1",
+      "password": "test1"
     }
   ]
 }
