@@ -78,5 +78,15 @@
     "C": "pasti muter",
     "D": "pasti ada yang ngegoes",
     "kunci_jawaban": "D"
+  },
+  {
+    "no": 9,
+    "soal": "print('2' + 3) menghasilkan nilai...",
+    "nilai": 15,
+    "A": "5",
+    "B": "'5'",
+    "C": "'23'",
+    "D": "error",
+    "kunci_jawaban": "D"
   }
 ]

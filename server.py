@@ -61,22 +61,22 @@ class UserThread(threading.Thread):
                             print('username : '+str(srcUser))                             
                             print('password lama: '+str(usr['password']))
                             #password baru
-                            pwd = self.usocket.recv(3048).decode() 
+                            pwd = self.usocket.recv(3048).decode()
                             print('password baru:'+str(pwd))
-                            usr['password'] = pwd                            
-                            isupdated = 'Updated'                            
-                        temp1.append(usr)                        
-                    self.userlogin[command] = temp1                                                         
-                    self.usocket.send(isupdated.encode('UTF-8'))                    
+                            usr['password'] = pwd
+                            isupdated = 'Updated'
+                        temp1.append(usr)
+                    self.userlogin[command] = temp1
+                    self.usocket.send(isupdated.encode('UTF-8'))
                 elif subcommand=='insert':                    
-                    temp = {}                    
+                    temp = {}
                     uname = self.usocket.recv(3048).decode()
                     pwd = self.usocket.recv(3048).decode()
                     check = 'insert berhasil'
-                    for usr in self.userlogin[command]:                        
-                        if usr['username']==uname:                            
-                            check = 'username sudah ada!!!' 
-                            break                                              
+                    for usr in self.userlogin[command]:
+                        if usr['username']==uname:
+                            check = 'username sudah ada!!!'
+                            break
                     if check=='insert berhasil':
                         temp['username'] = uname
                         temp['password'] = pwd
@@ -86,7 +86,7 @@ class UserThread(threading.Thread):
                     print('Error filtering subcommand!!!')
                 with open('users.json', 'w') as up:
                     json.dump(self.userlogin, up, indent=2)
-                self.updateUserLogin()                
+                self.updateUserLogin()
         elif command=='status':
             admStat = 'now connected admin = '+ str(len(user_connected['admin']))
             self.usocket.send(admStat.encode('UTF-8'))
@@ -111,13 +111,14 @@ class UserThread(threading.Thread):
                     semuaSoal += 'kunci_jawaban: '+s['kunci_jawaban']+'\n\n'
                 self.usocket.send(semuaSoal.encode('UTF-8'))
             elif subcommand=='insert' or subcommand=='update' or subcommand=='delete':
-                if subcommand=='update' or subcommand=='delete':
+                if subcommand == 'delete':
                     no = int(self.usocket.recv(3048).decode())
-                    print('Found : ')
-                    print('no : '+str(no))
-                    for s in self.soal:
-                        if s['no']==no:
-                            print('no.'+str(s['no']))
+                    temp1 = []
+                    print('siap menerima input delete')
+                    isdeleted = 'Delete Failed'
+                    for s in self.soal:                        
+                        if s['no'] == no:
+                            print('Found : ')
                             print('soal : '+s['soal'])
                             print('nilai : '+str(s['nilai']))
                             print('A.'+s['A'])
@@ -125,37 +126,40 @@ class UserThread(threading.Thread):
                             print('C.'+s['C'])
                             print('D.'+s['D'])
                             print('kunci_jawaban: '+s['kunci_jawaban'])
-                            break
-                        self.soal=s
-                    if subcommand=='delete':
-                        print('belom dibikin')
-                        # TODO: hapus soal yang dicari
-                        # TODO: ubah seluruh nomor yang ada di setelah nomor itu
-                    if subcommand=='update':
-                        print('siap menerima input update')
-                        soal = self.usocket.recv(3048).decode()
-                        nilai = int(self.usocket.recv(3048).decode())
-                        A = self.usocket.recv(3048).decode()
-                        B = self.usocket.recv(3048).decode()
-                        C = self.usocket.recv(3048).decode()
-                        D = self.usocket.recv(3048).decode()
-                        kunjaw = self.usocket.recv(3048).decode()
-                        isupdated = 'Update Failed'
-                        for s in self.soal:
-                            if s['no']==no:
-                                s['soal'] = soal
-                                s['nilai'] = nilai
-                                s['A'] = A
-                                s['B'] = B
-                                s['C'] = C
-                                s['D'] = D
-                                s['kunci_jawaban'] = kunjaw
-                                isupdated = 'Updated'
-                                break
-                        self.usocket.send(isupdated.encode('UTF-8'))
-                    else:
-                        print('Error filtering subcommand!!!')
-                elif subcommand=='insert':
+                            isdeleted = 'Deleted'
+                        else:
+                            temp1.append(s)
+                    self.soal = temp1
+                    self.usocket.send(isdeleted.encode('UTF-8'))
+                    print('delete soal nomor'+str(no)+' berhasil dilakukan')
+                elif subcommand == 'update':
+                    no = int(self.usocket.recv(3048).decode())
+                    temp1 = []
+                    print('siap menerima input update')
+                    isupdated = 'Update Failed'
+                    for s in self.soal:
+                        if s['no']==no:
+                            print('Found : ')
+                            print('soal : '+s['soal'])
+                            print('nilai : '+str(s['nilai']))
+                            print('A.'+s['A'])
+                            print('B.'+s['B'])
+                            print('C.'+s['C'])
+                            print('D.'+s['D'])
+                            print('kunci_jawaban: '+s['kunci_jawaban'])
+                            #soal baru
+                            soal = self.usocket.recv(3048).decode()
+                            nilai = int(self.usocket.recv(3048).decode())
+                            A = self.usocket.recv(3048).decode()
+                            B = self.usocket.recv(3048).decode()
+                            C = self.usocket.recv(3048).decode()
+                            D = self.usocket.recv(3048).decode()
+                            kunjaw = self.usocket.recv(3048).decode()                                                        
+                            isupdated = 'Updated'
+                        temp1.append(s)
+                    self.soal = temp1
+                    self.usocket.send(isupdated.encode('UTF-8'))
+                elif subcommand == 'insert':
                     temp = {}
                     # nomor soal otomatis
                     no = len(self.soal)+1
@@ -175,10 +179,12 @@ class UserThread(threading.Thread):
                     kunjaw = self.usocket.recv(3048).decode()
                     temp['kunci_jawaban'] = kunjaw
                     self.usocket.send('insert berhasil'.encode('UTF-8'))
-                    self.soal.append(temp)
+                    self.soal.append(temp)								                    
+                else:
+                    print('Error filtering subcommand!!!')
                 with open('soal.json', 'w') as up:
                     json.dump(self.soal, up, indent=2)
-                self.updateUserLogin()
+                self.updateUserLogin()				                   
             else:
                 print('command tidak ada!!!')
         elif command=='game':

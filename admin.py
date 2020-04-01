@@ -75,7 +75,7 @@ def iudSoal(mainCommand,subcommand):
 				if no!='':
 					print('Input harus angka')
 				no = input('no : ')
-			admin.sendall(no.encode('UTF-8'))
+			admin.sendall(str(no).encode('UTF-8'))
 			if subcommand=='update':
 				soal = input('soal : ')
 				admin.sendall(soal.encode('UTF-8'))
@@ -100,7 +100,7 @@ def iudSoal(mainCommand,subcommand):
 				admin.sendall(kunjaw.encode('UTF-8'))
 				print(mainCommand+' '+admin.recv(2222).decode('UTF-8'))
 			elif subcommand=='delete':
-				print('user '+mainCommand+' with no '+no+' has been removed')
+				print('soal nomor '+str(no)+' has been removed')
 			else:
 				print('Error filtering subcommand!!!')
 		elif subcommand=='insert':
